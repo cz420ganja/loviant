@@ -483,31 +483,29 @@ input {
   display: grid;
   grid-template-columns: 1fr;
   grid-template-areas:
-    "avatar"
-    "header"
-    "desc"
-    "action";
+    "stack";
   position: relative;
   overflow: hidden;
   align-items: end;
   min-height: 0;
   align-self: start;
   padding: 0;
-  background: rgba(17, 19, 28, 0.68);
+  border: 0;
+  background: transparent;
 }
 
 .avatar {
-  grid-area: avatar;
+  grid-area: stack;
   aspect-ratio: 9 / 16;
   width: 100%;
   height: clamp(18rem, 34vw, 30rem);
   min-height: 0;
-  border-radius: 0.75rem 0.75rem 0 0;
+  border-radius: 0.85rem;
   margin-bottom: 0;
   background-position: center;
   background-size: contain;
   background-repeat: no-repeat;
-  background-color: rgba(6, 8, 14, 0.74);
+  background-color: transparent;
 }
 
 .avatar-one {
@@ -539,26 +537,36 @@ input {
 }
 
 .card-row {
-  grid-area: header;
+  grid-area: stack;
+  align-self: end;
+  z-index: 1;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  padding: 0.85rem 0.85rem 0;
+  padding: 0 0.85rem 4.4rem;
+  background: linear-gradient(180deg, transparent, rgba(8, 5, 9, 0.78));
 }
 
 .character-card p {
-  grid-area: desc;
-  margin-bottom: 0.7rem;
-  padding: 0 0.85rem;
+  grid-area: stack;
+  align-self: end;
+  z-index: 1;
+  margin: 0;
+  padding: 0 0.85rem 2.7rem;
+  color: #fff;
+  font-size: 0.9rem;
+  text-shadow: 0 0.1rem 0.7rem rgba(0, 0, 0, 0.75);
 }
 
 .character-card .text-link,
 .character-card .card-action {
-  grid-area: action;
+  grid-area: stack;
   align-self: end;
+  z-index: 1;
   width: fit-content;
   margin: 0 0.85rem 0.85rem;
+  text-shadow: 0 0.1rem 0.7rem rgba(0, 0, 0, 0.75);
 }
 
 .text-link {
