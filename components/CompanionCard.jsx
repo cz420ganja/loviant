@@ -7,7 +7,6 @@ export function CompanionCard({ companion, buttonStyle = "text-link" }) {
       <div className={`avatar ${companion.avatarClass}`}></div>
       <div className="card-row">
         <h3>{companion.name}</h3>
-        <span>{companion.type}</span>
       </div>
       <p>{companion.description}</p>
       <Link className={buttonStyle} href={companionActionHref(companion)}>
