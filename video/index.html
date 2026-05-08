@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Video | Loviant</title>
+    <link rel="stylesheet" href="../styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="../index.html"><img class="brand-logo" src="../images/brand-logo.png" alt="Loviant" /></a>
+      <nav class="nav-links" aria-label="Primary navigation">
+        <a href="../matches/index.html">Companions</a>
+        <a href="../create/index.html">Create</a>
+        <a href="../pricing/index.html">Credits</a>
+      </nav>
+      <a class="header-button" href="../login/index.html">Sign in</a>
+    </header>
+
+    <main class="video-layout">
+      <section class="page-heading">
+        <p class="eyebrow">AI video generation</p>
+        <h1>Create short companion videos.</h1>
+        <p>
+          Pick a companion, describe the scene, and generate a short romantic,
+          cinematic, or playful video clip when the RunPod backend is connected.
+        </p>
+        <a class="secondary-action page-back-button" href="../create/index.html">Back to Create Companion</a>
+      </section>
+
+      <section class="video-grid">
+        <form class="studio-panel video-form">
+          <div class="panel-topbar">
+            <span>Video Prompt</span>
+            <span class="credits">Cost: 2 credits</span>
+          </div>
+
+          <label class="prompt-label">
+            Companion
+            <select id="videoCompanionSelect">
+              <option>Mira</option>
+              <option>Nova</option>
+              <option>Seren</option>
+              <option>Elera</option>
+              <option>Luna</option>
+              <option>Aria</option>
+              <option>Custom companion</option>
+            </select>
+          </label>
+
+          <label class="prompt-label">
+            Scene
+            <textarea
+              id="videoPrompt"
+              rows="7"
+              placeholder="Example: Mira smiles softly in neon city lights, cinematic close-up, gentle camera movement..."
+            ></textarea>
+          </label>
+
+          <div class="control-grid">
+            <label>
+              Mood
+              <select>
+                <option>Romantic</option>
+                <option>Playful</option>
+                <option>Cinematic</option>
+                <option>Dreamy</option>
+              </select>
+            </label>
+            <label>
+              Length
+              <select>
+                <option>4 seconds</option>
+                <option>6 seconds</option>
+                <option>8 seconds</option>
+              </select>
+            </label>
+          </div>
+
+          <button class="generate-button" id="videoButton" type="button">
+            Queue Video
+          </button>
+        </form>
+
+        <section class="video-preview-card">
+          <div class="video-frame" id="videoPreview">
+            <span>Video preview will appear here</span>
+          </div>
+          <div class="profile-content">
+            <h2>Generation Queue</h2>
+            <p>
+              This static mockup shows the final flow. Later, this button will
+              call your backend, spend credits, and send the job to RunPod.
+            </p>
+            <div class="profile-tags">
+              <span>RunPod</span>
+              <span>Credits</span>
+              <span>History</span>
+            </div>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <script src="../script.js"></script>
+  </body>
+</html>

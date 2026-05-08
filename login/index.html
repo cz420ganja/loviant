@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sign in or sign up | Loviant</title>
+    <link rel="stylesheet" href="../styles.css" />
+  </head>
+  <body>
+    <main class="auth-layout">
+      <section class="auth-card">
+        <a class="brand auth-brand" href="../index.html"><img class="brand-logo" src="../images/brand-logo.png" alt="Loviant" /></a>
+        <div>
+          <p class="eyebrow">Member access</p>
+          <h1>Sign in or create account</h1>
+          <p>Access matches, credits, image editing, video generation, and your private companions.</p>
+        </div>
+        <div class="auth-tabs" role="tablist" aria-label="Account options">
+          <button class="auth-tab is-active" id="signInTab" type="button" aria-controls="signInForm">Sign in</button>
+          <button class="auth-tab" id="signUpTab" type="button" aria-controls="signUpForm">Sign up</button>
+        </div>
+        <form class="auth-form auth-panel is-active" id="signInForm">
+          <label>Email <input type="email" name="email" placeholder="you@example.com" autocomplete="email" /></label>
+          <label>Password <input type="password" name="password" placeholder="Password" autocomplete="current-password" /></label>
+          <button class="generate-button" type="button">Sign in</button>
+        </form>
+        <form class="auth-form auth-panel" id="signUpForm">
+          <label>Username <input type="text" name="username" placeholder="Choose a username" autocomplete="username" /></label>
+          <label>Email <input type="email" name="email" placeholder="you@example.com" autocomplete="email" /></label>
+          <label>Password <input type="password" name="password" placeholder="Create a password" autocomplete="new-password" /></label>
+          <button class="generate-button" type="button">Create account</button>
+        </form>
+        <a class="text-link" href="../index.html">Back to homepage</a>
+      </section>
+    </main>
+    <script src="../script.js"></script>
+  </body>
+</html>

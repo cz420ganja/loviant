@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Images | Loviant</title>
+    <link rel="stylesheet" href="../styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="../index.html"><img class="brand-logo" src="../images/brand-logo.png" alt="Loviant" /></a>
+      <nav class="nav-links" aria-label="Primary navigation">
+        <a href="../matches/index.html">Companions</a>
+        <a href="../create/index.html">Create</a>
+        <a href="../pricing/index.html">Credits</a>
+      </nav>
+      <a class="header-button" href="../login/index.html">Sign in</a>
+    </header>
+
+    <main class="image-layout">
+      <section class="page-heading">
+        <p class="eyebrow">Image editor</p>
+        <h1>Upload and edit saved images.</h1>
+        <p>
+          Bring in a companion image, describe the edit, and save edited versions
+          locally before connecting a full AI image editing backend.
+        </p>
+        <a class="secondary-action page-back-button" href="../create/index.html">Back to Create Companion</a>
+      </section>
+
+      <section class="image-editor-grid">
+        <section class="studio-panel editor-controls">
+          <div class="panel-topbar">
+            <span>Image Edit</span>
+            <span class="credits">Cost: 1 credit</span>
+          </div>
+
+          <label class="prompt-label">Choose companion
+            <select id="imageCompanionSelect">
+              <option value="upload">Upload new image</option>
+              <option value="mira">Mira</option>
+              <option value="nova">Nova</option>
+              <option value="seren">Seren</option>
+              <option value="elera">Elera</option>
+              <option value="luna">Luna</option>
+              <option value="aria">Aria</option>
+            </select>
+          </label>
+
+          <label class="prompt-label" for="imageEditPrompt">
+            Image prompt
+            <textarea
+              id="imageEditPrompt"
+              rows="5"
+              placeholder="Example: change the outfit to a black dress, add soft studio lighting, keep the same face..."
+            ></textarea>
+          </label>
+
+          <label class="upload-drop" for="imageUpload">
+            <input id="imageUpload" type="file" accept="image/*" />
+            <span>Choose image</span>
+            <small>PNG, JPG, or WebP</small>
+          </label>
+
+          <div class="editor-actions single-action">
+            <button class="generate-button" id="saveImageButton" type="button">Save Edit</button>
+          </div>
+        </section>
+
+        <section class="image-canvas-card">
+          <canvas id="imageCanvas" width="720" height="960"></canvas>
+          <div class="empty-canvas" id="emptyCanvas">Upload an image to start editing</div>
+        </section>
+      </section>
+
+      <section class="section saved-section">
+        <div class="section-heading">
+          <p class="eyebrow">Saved</p>
+          <h2>Edited Images</h2>
+        </div>
+        <div class="saved-image-grid" id="savedImageGrid"></div>
+      </section>
+    </main>
+
+    <script src="../script.js"></script>
+  </body>
+</html>

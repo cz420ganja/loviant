@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Create | Loviant</title>
+    <link rel="stylesheet" href="../styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="../index.html"><img class="brand-logo" src="../images/brand-logo.png" alt="Loviant" /></a>
+      <nav class="nav-links" aria-label="Primary navigation">
+        <a href="../matches/index.html">Companions</a>
+        <a href="../create/index.html">Create</a>
+        <a href="../pricing/index.html">Credits</a>
+      </nav>
+      <a class="header-button" href="../login/index.html">Sign in</a>
+    </header>
+
+    <main class="builder-layout">
+      <section class="page-heading">
+        <p class="eyebrow">Create</p>
+        <h1>Create companions, videos, and images.</h1>
+        <p>Start with a custom AI companion, generate a video scene, or upload and edit saved images.</p>
+      </section>
+
+      <section class="create-hub-grid" aria-label="Creation options">
+        <a class="create-option-card active" href="#companion-builder">
+          <span>01</span>
+          <h2>Create Companion</h2>
+          <p>Design personality, look, tone, and relationship style.</p>
+        </a>
+        <a class="create-option-card" href="../video/index.html">
+          <span>02</span>
+          <h2>Create Video</h2>
+          <p>Turn a companion and prompt into a short AI video scene.</p>
+        </a>
+        <a class="create-option-card" href="../images/index.html">
+          <span>03</span>
+          <h2>Edit Images</h2>
+          <p>Upload saved images, adjust them, and keep local edits.</p>
+        </a>
+      </section>
+
+      <section class="builder-grid">
+        <form class="studio-panel builder-form" id="createCompanionForm">
+          <div class="panel-topbar" id="companion-builder">
+            <span>Companion Builder</span>
+            <span class="credits">Cost: 1 credit</span>
+          </div>
+          <label class="prompt-label">Name <input id="companionName" type="text" placeholder="Name your new companion" /></label>
+          <label class="prompt-label">Ethnicity / background
+            <input id="companionEthnicity" type="text" placeholder="Example: Latina, Korean, Arab, mixed, etc." />
+          </label>
+          <label class="prompt-label">Style
+            <select id="companionStyle">
+              <option>Realistic</option>
+              <option>Anime</option>
+              <option>Glamour</option>
+              <option>Casual</option>
+            </select>
+          </label>
+          <div class="control-grid">
+            <label class="prompt-label">Age range
+              <select id="companionAgeRange">
+                <option>18-25</option>
+                <option>26-30</option>
+                <option>31-40</option>
+              </select>
+            </label>
+            <label class="prompt-label">Scene
+              <select id="companionScene">
+                <option>Studio portrait</option>
+                <option>Luxury apartment</option>
+                <option>Neon city</option>
+                <option>Beach sunset</option>
+                <option>Bedroom setting</option>
+                <option>Custom in details</option>
+              </select>
+            </label>
+          </div>
+          <div class="control-grid">
+            <label class="prompt-label">Outfit
+              <select id="companionOutfit">
+                <option>bikini</option>
+                <option>Casual outfit</option>
+                <option>Glamour look</option>
+                <option>Streetwear</option>
+                <option>Custom in details</option>
+              </select>
+            </label>
+            <label class="prompt-label">Position
+              <select id="companionPosition">
+                <option>Standing pose</option>
+                <option>Portrait pose</option>
+                <option>Missionary</option>
+                <option>knees to chest</option>
+                <option>bent over</option>
+                <option>Reverse Park</option>
+              </select>
+            </label>
+          </div>
+          <label class="prompt-label">Details
+            <textarea id="companionDetails" rows="6" placeholder="Describe hair, body type, outfit, voice, hobbies, image style, video style, and personality..."></textarea>
+          </label>
+          <button class="generate-button" type="submit">Save Companion</button>
+          <p class="form-status" id="createCompanionStatus" aria-live="polite"></p>
+        </form>
+
+        <section class="match-panel builder-preview" id="generatedCompanionPreview">
+          <div class="profile-photo generated-photo" id="generatedCompanionPhoto"><div class="match-badge">Custom</div></div>
+          <div class="profile-content">
+            <h2 id="previewCompanionName">Your Companion</h2>
+            <p id="previewCompanionDetails">A private AI personality ready for images, voice, and video generation.</p>
+            <div class="profile-tags" id="previewCompanionTags"><span>Private</span><span>Custom</span><span>Video ready</span></div>
+            <a class="generate-button hidden-action" id="videoRedirectButton" href="../video/index.html">Create Video With This Companion</a>
+          </div>
+        </section>
+      </section>
+
+      <section class="section saved-companions-section">
+        <div class="section-heading">
+          <p class="eyebrow">Saved</p>
+          <h2>Companion Collage</h2>
+        </div>
+        <div class="saved-companion-grid" id="savedCompanionGrid"></div>
+      </section>
+    </main>
+    <script src="../script.js"></script>
+  </body>
+</html>
