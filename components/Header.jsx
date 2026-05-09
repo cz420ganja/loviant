@@ -40,6 +40,20 @@ export async function Header() {
           <Link href="/pricing">Credits</Link>
           <Link href="/terms">Terms</Link>
         </nav>
+        <details className="mobile-menu">
+          <summary aria-label="Open mobile menu">
+            <span></span>
+            <span></span>
+            <span></span>
+          </summary>
+          <div className="mobile-menu-panel">
+            <Link href="/matches">Companions</Link>
+            <Link href="/create">Create</Link>
+            <Link href="/pricing">Credits</Link>
+            <Link href="/terms">Terms</Link>
+            <Link href={user ? "/account" : "/login"}>{user ? "Account" : "Sign in"}</Link>
+          </div>
+        </details>
         {user ? (
           <Link className="header-button" href="/account">
             {displayName} {profile ? `- ${profile.credits} credits` : ""}
