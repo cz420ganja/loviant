@@ -5,13 +5,13 @@ export function CompanionCard({ companion, buttonStyle = "text-link" }) {
   return (
     <article className="character-card">
       <div className={`avatar ${companion.avatarClass}`}></div>
-      <div className="card-row">
+      <div className="character-copy">
         <h3>{companion.name}</h3>
+        <p>{companion.description}</p>
+        <Link className={buttonStyle} href={companionActionHref(companion)}>
+          Start editing now
+        </Link>
       </div>
-      <p>{companion.description}</p>
-      <Link className={buttonStyle} href={companionActionHref(companion)}>
-        Start editing now
-      </Link>
     </article>
   );
 }
