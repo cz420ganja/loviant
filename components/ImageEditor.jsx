@@ -116,7 +116,7 @@ export function ImageEditor() {
             </button>
           </div>
         </section>
-        <section className="image-canvas-card">
+        <section className={`image-canvas-card ${hasImage ? "has-image" : ""}`}>
           <canvas ref={canvasRef} width="720" height="960"></canvas>
           {!hasImage && <div className="empty-canvas">Upload an image to start editing</div>}
         </section>
