@@ -2,7 +2,7 @@ import { createClient } from "../../../../lib/supabase/server";
 import { ensureProfile } from "../_profile";
 
 export async function POST(request) {
-  const { login, password } = await request.json();
+  const { login, password } = await request.json().catch(() => ({}));
 
   if (!login?.trim() || !password) {
     return Response.json({ ok: false, message: "Email and password are required." }, { status: 400 });
@@ -15,17 +15,17 @@ export async function POST(request) {
     );
   }
 
-  const supabase = await createClient();
-  const { data, error } = await supabase.auth.signInWithPassword({
-    email: login.trim().toLowerCase(),
-    password,
-  });
-
-  if (error) {
-    return Response.json({ ok: false, message: error.message }, { status: 400 });
-  }
-
   try {
+    const supabase = await createClient();
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: login.trim().toLowerCase(),
+      password,
+    });
+
+    if (error) {
+      return Response.json({ ok: false, message: error.message }, { status: 400 });
+    }
+
     const profile = await ensureProfile(supabase, data.user);
     return Response.json({ ok: true, profile });
   } catch (error) {

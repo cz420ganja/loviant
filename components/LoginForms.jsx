@@ -1,4 +1,38 @@
+"use client";
+
+import { useState } from "react";
+
 export function LoginForms({ initialMode = null, error = "" }) {
+  const [message, setMessage] = useState(error);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  async function submitForm(event, endpoint) {
+    event.preventDefault();
+    setIsSubmitting(true);
+    setMessage("");
+
+    const formData = new FormData(event.currentTarget);
+    const payload = Object.fromEntries(formData.entries());
+
+    try {
+      const response = await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const result = await response.json().catch(() => ({}));
+
+      if (!response.ok || !result.ok) {
+        throw new Error(result.message || "Account request failed. Please try again.");
+      }
+
+      window.location.assign("/");
+    } catch (submitError) {
+      setMessage(submitError.message);
+      setIsSubmitting(false);
+    }
+  }
+
   return (
     <>
       <div className="auth-choice-grid" aria-label="Choose account action">
@@ -19,7 +53,7 @@ export function LoginForms({ initialMode = null, error = "" }) {
       {initialMode === "signin" && (
         <section className="auth-section">
           <h2>Sign in</h2>
-          <form className="auth-form" action="/login/signin" method="post">
+          <form className="auth-form" onSubmit={(event) => submitForm(event, "/api/auth/signin")}>
             <label>
               Username or email
               <input type="text" name="login" placeholder="you@example.com" autoComplete="username" required />
@@ -28,7 +62,9 @@ export function LoginForms({ initialMode = null, error = "" }) {
               Password
               <input type="password" name="password" placeholder="Password" autoComplete="current-password" required />
             </label>
-            <button className="generate-button" type="submit">Sign in</button>
+            <button className="generate-button" type="submit" disabled={isSubmitting}>
+              {isSubmitting ? "Signing in..." : "Sign in"}
+            </button>
           </form>
         </section>
       )}
@@ -36,7 +72,7 @@ export function LoginForms({ initialMode = null, error = "" }) {
       {initialMode === "signup" && (
         <section className="auth-section">
           <h2>Create account</h2>
-          <form className="auth-form" action="/login/signup" method="post">
+          <form className="auth-form" onSubmit={(event) => submitForm(event, "/api/auth/signup")}>
             <label>
               Username
               <input type="text" name="username" placeholder="Choose a username" autoComplete="username" required />
@@ -49,12 +85,15 @@ export function LoginForms({ initialMode = null, error = "" }) {
               Password
               <input type="password" name="password" placeholder="Create a password" autoComplete="new-password" minLength={8} required />
             </label>
-            <button className="generate-button" type="submit">Create account</button>
+            <button className="generate-button" type="submit" disabled={isSubmitting}>
+              {isSubmitting ? "Creating account..." : "Create account"}
+            </button>
           </form>
         </section>
       )}
 
-      {error && <p className="form-status is-error">{error}</p>}
+      {message && <p className="form-status is-error">{message}</p>}
     </>
   );
 }
+
