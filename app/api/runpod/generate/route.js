@@ -2,6 +2,12 @@ import { createClient } from "../../../../lib/supabase/server";
 import { createAdminClient, isSupabaseAdminConfigured } from "../../../../lib/supabase/admin";
 import { buildZImageTurboPrompt } from "../../../../lib/workflows/zImageTurbo";
 
+export const maxDuration = 300;
+
+function wait(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 function buildCompanionPrompt(body) {
   const parts = [
     "realistic 9:16 portrait photo of an attractive adult woman",
@@ -28,6 +34,9 @@ function extractImageUrl(output) {
 
   const direct = output.image_url || output.imageUrl || output.url || output.output_url;
   if (direct) return direct;
+  if (typeof output.image === "string") {
+    return output.image.startsWith("data:image") ? output.image : `data:image/png;base64,${output.image}`;
+  }
 
   const images = output.images || output.image || output.result;
   if (Array.isArray(images)) {
@@ -61,7 +70,7 @@ async function callRunPod(workflow) {
     };
   }
 
-  const response = await fetch(`https://api.runpod.ai/v2/${endpointId}/runsync`, {
+  const runResponse = await fetch(`https://api.runpod.ai/v2/${endpointId}/run`, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${apiKey}`,
@@ -70,27 +79,93 @@ async function callRunPod(workflow) {
     body: JSON.stringify({
       input: {
         workflow,
-        prompt: workflow,
+        prompt: workflow?.["27"]?.inputs?.text || "",
+        width: workflow?.["13"]?.inputs?.width || 768,
+        height: workflow?.["13"]?.inputs?.height || 1344,
       },
     }),
-    signal: AbortSignal.timeout(Number(process.env.RUNPOD_SYNC_TIMEOUT_MS || 120000)),
+    signal: AbortSignal.timeout(Number(process.env.RUNPOD_SUBMIT_TIMEOUT_MS || 30000)),
   });
 
-  const data = await response.json().catch(() => ({}));
-  if (!response.ok) {
+  const runData = await runResponse.json().catch(() => ({}));
+  if (!runResponse.ok) {
     return {
       ok: false,
-      status: response.status,
+      status: runResponse.status,
       body: {
         ok: false,
         status: "runpod_error",
-        message: data?.error || data?.message || "RunPod request failed.",
-        runpod: data,
+        message: runData?.error || runData?.message || "RunPod request failed.",
+        runpod: runData,
       },
     };
   }
 
-  return { ok: true, status: 200, body: data };
+  const runpodJobId = runData.id;
+  if (!runpodJobId) {
+    return { ok: true, status: 200, body: runData };
+  }
+
+  const timeoutMs = Number(process.env.RUNPOD_SYNC_TIMEOUT_MS || 300000);
+  const startedAt = Date.now();
+  let lastStatus = runData.status || "IN_QUEUE";
+  let lastData = runData;
+
+  while (Date.now() - startedAt < timeoutMs) {
+    await wait(3000);
+
+    const statusResponse = await fetch(`https://api.runpod.ai/v2/${endpointId}/status/${runpodJobId}`, {
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+      },
+      signal: AbortSignal.timeout(Number(process.env.RUNPOD_STATUS_TIMEOUT_MS || 30000)),
+    });
+
+    const statusData = await statusResponse.json().catch(() => ({}));
+    if (!statusResponse.ok) {
+      return {
+        ok: false,
+        status: statusResponse.status,
+        body: {
+          ok: false,
+          status: "runpod_status_error",
+          message: statusData?.error || statusData?.message || "RunPod status request failed.",
+          runpod: statusData,
+        },
+      };
+    }
+
+    lastData = statusData;
+    lastStatus = statusData.status || lastStatus;
+
+    if (["COMPLETED", "SUCCEEDED"].includes(lastStatus)) {
+      return { ok: true, status: 200, body: statusData };
+    }
+
+    if (["FAILED", "CANCELLED", "TIMED_OUT"].includes(lastStatus)) {
+      return {
+        ok: false,
+        status: 500,
+        body: {
+          ok: false,
+          status: lastStatus.toLowerCase(),
+          message: statusData.error || statusData.message || `RunPod job ${lastStatus.toLowerCase()}.`,
+          runpod: statusData,
+        },
+      };
+    }
+  }
+
+  return {
+    ok: false,
+    status: 504,
+    body: {
+      ok: false,
+      status: "timeout",
+      message: `RunPod is still ${lastStatus}. Try again in a moment or check the endpoint Workers and Logs tabs.`,
+      runpod: lastData,
+    },
+  };
 }
 
 async function refundCredit(admin, profile, jobId, reason) {
@@ -173,7 +248,9 @@ export async function POST(request) {
   });
 
   try {
+    const runpodStartedAt = Date.now();
     const runpod = await callRunPod(workflow);
+    const elapsedSeconds = Math.round((Date.now() - runpodStartedAt) / 1000);
     if (!runpod.ok) {
       await refundCredit(admin, { ...profile, credits: nextBalance }, jobId, runpod.body.message);
       await admin
@@ -202,6 +279,7 @@ export async function POST(request) {
       jobId,
       imageUrl,
       credits: nextBalance,
+      elapsedSeconds,
       message: imageUrl ? "Image generated." : "RunPod finished, but no image URL was found in the response.",
       runpod: runpod.body,
     });

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export function CreateCompanionForm() {
   const [name, setName] = useState("");
@@ -8,6 +8,16 @@ export function CreateCompanionForm() {
   const [statusType, setStatusType] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedImage, setGeneratedImage] = useState("");
+  const [elapsedSeconds, setElapsedSeconds] = useState(0);
+
+  useEffect(() => {
+    if (!isGenerating) return undefined;
+    setElapsedSeconds(0);
+    const interval = window.setInterval(() => {
+      setElapsedSeconds((seconds) => seconds + 1);
+    }, 1000);
+    return () => window.clearInterval(interval);
+  }, [isGenerating]);
 
   return (
     <section className="builder-grid">
@@ -17,8 +27,9 @@ export function CreateCompanionForm() {
         onSubmit={async (event) => {
           event.preventDefault();
           setIsGenerating(true);
+          setElapsedSeconds(0);
           setStatusType("");
-          setStatus("Generating with Z-Image Turbo...");
+          setStatus("Queued. Waiting for the image worker...");
 
           const formData = new FormData(event.currentTarget);
           const payload = Object.fromEntries(formData.entries());
@@ -39,7 +50,7 @@ export function CreateCompanionForm() {
               setGeneratedImage(result.imageUrl);
             }
             setStatusType("is-success");
-            setStatus(result.imageUrl ? "Companion generated." : result.message);
+            setStatus(result.imageUrl ? `Companion generated in ${result.elapsedSeconds || elapsedSeconds}s.` : result.message);
           } catch (error) {
             setStatusType("is-error");
             setStatus(error.message);
@@ -69,9 +80,11 @@ export function CreateCompanionForm() {
           <textarea name="details" rows="6" placeholder="Describe hair, body type, outfit, voice, hobbies, image style, video style, and personality..."></textarea>
         </label>
         <button className="generate-button" type="submit" disabled={isGenerating}>
-          {isGenerating ? "Generating..." : "Generate Companion"}
+          {isGenerating ? `Generating... ${elapsedSeconds}s` : "Generate Companion"}
         </button>
-        <p className={`form-status ${statusType}`} aria-live="polite">{status}</p>
+        <p className={`form-status ${statusType}`} aria-live="polite">
+          {isGenerating && elapsedSeconds > 15 ? `Still working (${elapsedSeconds}s). First runs can be slow while RunPod starts the worker.` : status}
+        </p>
       </form>
       <section className="match-panel builder-preview">
         <div
