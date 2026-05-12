@@ -33,7 +33,7 @@ export default async function AccountPage() {
           <article className="price-card">
             <span>Credits</span>
             <strong>{profile?.credits ?? 0}</strong>
-            <p>New accounts receive 3 free image credits once.</p>
+            <p>New accounts receive 1 free image credit once.</p>
           </article>
           <article className="price-card">
             <span>Email</span>

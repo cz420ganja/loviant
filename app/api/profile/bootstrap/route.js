@@ -40,7 +40,7 @@ export async function POST() {
       id: user.id,
       email: user.email,
       username,
-      credits: 3,
+      credits: 1,
     })
     .select("id, username, email, role, credits")
     .single();

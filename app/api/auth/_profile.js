@@ -21,7 +21,7 @@ export async function ensureProfile(supabase, user) {
       id: user.id,
       email: user.email,
       username,
-      credits: 3,
+      credits: 1,
     })
     .select("id, username, email, role, credits")
     .single();

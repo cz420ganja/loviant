@@ -6,7 +6,7 @@ create table if not exists public.profiles (
   email text,
   username text,
   role text not null default 'user' check (role in ('user', 'admin', 'owner')),
-  credits integer not null default 3 check (credits >= 0),
+  credits integer not null default 1 check (credits >= 0),
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
